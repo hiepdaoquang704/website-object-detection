@@ -3,6 +3,16 @@ from .models import User
 from werkzeug.security import generate_password_hash, check_password_hash
 from . import db   ##means from __init__.py import db
 from flask_login import login_user, login_required, logout_user, current_user
+from werkzeug.utils import secure_filename, send_from_directory
+from subprocess import Popen
+import os
+from flask import Response
+from webcam import Webcam
+webcam=Webcam()
+
+import subprocess
+
+
 
 
 auth = Blueprint('auth',__name__)
@@ -23,6 +33,12 @@ def login():
             flash('Email does not exist.',category='error')
 
     return render_template("login.html")
+
+
+
+
+
+
 
 @auth.route('/signup', methods=['GET', 'POST'])
 def sign_up():
@@ -52,3 +68,11 @@ def sign_up():
             flash('Account created!', category='success')
             return redirect(url_for('views.home'))
     return render_template("sign_up_index.html")
+
+
+
+@auth.route("/dashbroad")
+def home():
+    # Khi người dùng truy cập trang chủ, bạn có thể khởi chạy ứng dụng Streamlit bằng subprocess
+    subprocess.Popen(["streamlit", "run", "streamlit_app.py"])
+    return render_template('home.html')
