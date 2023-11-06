@@ -7,8 +7,6 @@ from werkzeug.utils import secure_filename, send_from_directory
 from subprocess import Popen
 import os
 from flask import Response
-from webcam import Webcam
-webcam=Webcam()
 
 import subprocess
 
@@ -26,7 +24,7 @@ def login():
             if check_password_hash(user.password,password):
                 flash('Logged in successfully!',category='success')
                 login_user(user,remember=True)
-                return redirect(url_for('views.home'))
+                return redirect(url_for('views.dashboard'))
             else:
                 flash('Incorrect password,try again.',category='error')
         else:
@@ -71,8 +69,3 @@ def sign_up():
 
 
 
-@auth.route("/dashbroad")
-def home():
-    # Khi người dùng truy cập trang chủ, bạn có thể khởi chạy ứng dụng Streamlit bằng subprocess
-    subprocess.Popen(["streamlit", "run", "streamlit_app.py"])
-    return render_template('home.html')
