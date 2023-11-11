@@ -5,6 +5,7 @@ views = Blueprint('views',__name__)
 def home():
     return render_template('index.html')
 
+
 import subprocess
 
 @views.route('/dashboard')
