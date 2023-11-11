@@ -54,9 +54,9 @@ You must register account and login to redirect to my dashboard.Everything is fa
 
 ## Result
 
-![alt text](images/1.jpg "Log in")
-![alt text](images/2.jpg "Log out")
-![alt text](images/3.jpg "Dashboard and result")
+![alt text](images/1.png "Log in")
+![alt text](images/2.png "Log out")
+![alt text](images/3.png "Dashboard and result")
 
 ## Acknowledgement
 - https://github.com/ultralytics/ultralytics

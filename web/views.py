@@ -10,5 +10,5 @@ import subprocess
 
 @views.route('/dashboard')
 def dashboard():
-    subprocess.Popen(["streamlit", "run", "/home/hiepd/softwareEngine/web_site/web/dashboard.py", "--server.port=8501"])
+    subprocess.Popen(["streamlit", "run", "app.py", "--server.port=8501"])
     return redirect('http://localhost:8501')
