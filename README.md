@@ -1,5 +1,3 @@
-<div align="center">
-
 # YOLOv8 + Tracking Object Dectection
 
 
