@@ -1,16 +1,11 @@
-# Ultralytics YOLO 🚀, AGPL-3.0 license
-
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-
 from .metrics import bbox_iou
 from .tal import bbox2dist
 
 
 class VarifocalLoss(nn.Module):
-    """Varifocal loss by Zhang et al. https://arxiv.org/abs/2008.13367."""
-
     def __init__(self):
         """Initialize the VarifocalLoss class."""
         super().__init__()

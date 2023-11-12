@@ -52,7 +52,9 @@ source_selectbox = st.sidebar.selectbox(
     "Select Source",
     config.SOURCES_LIST
 )
-
+if (source_selectbox):
+    config.OBJECT_COUNTER =None
+    config.OBJECT_COUNTER1 = None
 source_img = None
 if source_selectbox == config.SOURCES_LIST[0]: # Image
     infer_uploaded_image(confidence, model)

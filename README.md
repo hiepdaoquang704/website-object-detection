@@ -47,7 +47,7 @@ The weight files can be downloaded automatic from the table below.
 
 ## Run
 ```commandline
-streamlit run main.py
+python main.py
 ```
 Then will start the Streamlit server and open your web browser to the default Streamlit page automatically.
 You must register account and login to redirect to my dashboard.Everything is fast.

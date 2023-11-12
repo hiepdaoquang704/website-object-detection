@@ -33,7 +33,5 @@ DETECTION_MODEL_LIST = [
     "yolov8m.pt",
     "yolov8l.pt",
     "yolov8x.pt"]
-
-
 OBJECT_COUNTER = None
 OBJECT_COUNTER1 = None

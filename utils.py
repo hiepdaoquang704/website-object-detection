@@ -6,8 +6,9 @@ import cv2
 from PIL import Image
 import tempfile
 import config
-
-def _display_detected_frames(conf, model, st_count, st_frame, image):
+import plotly.express as px
+import pandas as pd
+def _display_detected_frames(conf, model, st_count, st_frame, image,st_chart_placeholder):
     """
     Display the detected objects on a video frame using the YOLOv8 model.
     :param conf (float): Confidence threshold for object detection.
@@ -41,9 +42,12 @@ def _display_detected_frames(conf, model, st_count, st_frame, image):
                    channels="BGR",
                    use_column_width=True
                    )
+    if config.OBJECT_COUNTER is not None:
+        class_counts = pd.DataFrame(list(config.OBJECT_COUNTER.items()), columns=['Class', 'Count'])
+        fig = px.bar(class_counts, x='Class', y='Count', title='Object Count')
 
-
-@st.cache_resource
+        # Update the chart in the placeholder
+        st_chart_placeholder.plotly_chart(fig)
 def load_model(model_path):
     """
     Loads a YOLO object detection model from the specified model_path.
@@ -54,6 +58,7 @@ def load_model(model_path):
     Returns:
         A YOLO object detection model.
     """
+    
     model = YOLO(model_path)
     return model
 
@@ -102,7 +107,6 @@ def infer_uploaded_image(conf, model):
                         st.write("No image is uploaded yet!")
                         st.write(ex)
 
-
 def infer_uploaded_video(conf, model):
     """
     Execute inference for uploaded video
@@ -127,8 +131,10 @@ def infer_uploaded_video(conf, model):
                     tfile.write(source_video.read())
                     vid_cap = cv2.VideoCapture(
                         tfile.name)
+                    st_count, st_frame = st.columns(2)
                     st_count = st.empty()
                     st_frame = st.empty()
+                    st_chart_placeholder = st.empty()
                     while (vid_cap.isOpened()):
                         success, image = vid_cap.read()
                         if success:
@@ -136,7 +142,8 @@ def infer_uploaded_video(conf, model):
                                                      model,
                                                      st_count,
                                                      st_frame,
-                                                     image
+                                                     image,
+                                                     st_chart_placeholder
                                                      )
                         else:
                             vid_cap.release()
@@ -159,6 +166,7 @@ def infer_uploaded_webcam(conf, model):
         vid_cap = cv2.VideoCapture(0)  # local camera
         st_count = st.empty()
         st_frame = st.empty()
+        st_chart_placeholder = st.empty()
         while not flag:
             success, image = vid_cap.read()
             if success:
@@ -167,7 +175,8 @@ def infer_uploaded_webcam(conf, model):
                     model,
                     st_count,
                     st_frame,
-                    image
+                    image,
+                    st_chart_placeholder
                 )
             else:
                 vid_cap.release()
