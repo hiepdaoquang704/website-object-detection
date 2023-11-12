@@ -35,19 +35,38 @@ def _display_detected_frames(conf, model, st_count, st_frame, image,st_chart_pla
     # Plot the detected objects on the video frame
     st_count.write(inText + '\n\n' + outText)
     res_plotted = res[0].plot()
-    line = [(0, 500), (1050, 500)]
-    cv2.line(res_plotted, line[0], line[1], (46,162,112), 5)
+       # Get the width of the video frame
+    frame_width = image.shape[1]
+
+    # Draw a line across the video frame
+    line_start = (0, 500)
+    line_end = (frame_width, 500)
+    cv2.line(res_plotted, line_start, line_end, (46, 162, 112), 5)
     st_frame.image(res_plotted,
                    caption='Detected Video',
                    channels="BGR",
                    use_column_width=True
                    )
-    if config.OBJECT_COUNTER is not None:
-        class_counts = pd.DataFrame(list(config.OBJECT_COUNTER.items()), columns=['Class', 'Count'])
-        fig = px.bar(class_counts, x='Class', y='Count', title='Object Count')
+    if config.OBJECT_COUNTER1 is not None:
+        # Create a DataFrame for Vehicle In
+        in_counts = pd.DataFrame(list(config.OBJECT_COUNTER1.items()), columns=['Class', 'Count'])
+        in_fig = px.bar(in_counts, x='Class', y='Count', title='Vehicle In Count')
+        st_chart_placeholder[0].plotly_chart(in_fig)
 
-        # Update the chart in the placeholder
-        st_chart_placeholder.plotly_chart(fig)
+    if config.OBJECT_COUNTER is not None:
+        # Create a DataFrame for Vehicle Out
+        out_counts = pd.DataFrame(list(config.OBJECT_COUNTER.items()), columns=['Class', 'Count'])
+        out_fig = px.bar(out_counts, x='Class', y='Count', title='Vehicle Out Count')
+        st_chart_placeholder[1].plotly_chart(out_fig)
+
+def _display_detected_frames_camera(conf, model, st_frame, image):
+    res = model.predict(image, conf=conf)
+    res_plotted = res[0].plot()
+    st_frame.image(res_plotted,
+                caption='Detected Video',
+                channels="BGR",
+                use_column_width=True
+                )
 def load_model(model_path):
     """
     Loads a YOLO object detection model from the specified model_path.
@@ -134,7 +153,7 @@ def infer_uploaded_video(conf, model):
                     st_count, st_frame = st.columns(2)
                     st_count = st.empty()
                     st_frame = st.empty()
-                    st_chart_placeholder = st.empty()
+                    st_chart_placeholder = [st.empty(), st.empty()]
                     while (vid_cap.isOpened()):
                         success, image = vid_cap.read()
                         if success:
@@ -166,17 +185,15 @@ def infer_uploaded_webcam(conf, model):
         vid_cap = cv2.VideoCapture(0)  # local camera
         st_count = st.empty()
         st_frame = st.empty()
-        st_chart_placeholder = st.empty()
+        st_chart_placeholder = [st.empty(), st.empty()]
         while not flag:
             success, image = vid_cap.read()
             if success:
-                _display_detected_frames(
+                _display_detected_frames_camera(
                     conf,
                     model,
-                    st_count,
                     st_frame,
                     image,
-                    st_chart_placeholder
                 )
             else:
                 vid_cap.release()
